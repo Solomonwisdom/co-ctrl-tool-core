@@ -87,7 +87,7 @@ def initialize_flight():
         FLIGHT[i] = Flight(deepcopy(POINT), deepcopy(DIST), deepcopy(MISSION_A[i]), deepcopy(MISSION_B[i]))
         FLIGHT[i].update_from_center(deepcopy(MISSION_A[i]), deepcopy(MISSION_B[i]), deepcopy(TODO_LIST[i]))
     with open(CUR_DIR + "FLIGHT.json", "w") as f:
-        f.write(json.dumps(FLIGHT))
+        f.write(json.dumps(FLIGHT.to_dict()))
 
 def load_file():
     initialize_point()
