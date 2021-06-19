@@ -36,7 +36,7 @@ CURRENT_COST = []
 
 def init_center():
     global NUM_OF_FLIGHT, MISSION_ALL, MISSION_A, MISSION_B, TODO_LIST, POSITION, CURRENT_COST
-    f = open("data/information.json")
+    f = open(CUR_DIR + "data/information.json")
     content = json.load(f)
     f.close()
     NUM_OF_FLIGHT = content[0]
@@ -62,7 +62,7 @@ def init_center():
 
 def initialize_point():
     global POINT, NUM_OF_POINT
-    f = open("data/point.txt")
+    f = open(CUR_DIR + "data/point.txt")
     lines = f.read().splitlines()
     NUM_OF_POINT = len(lines)
     for line in lines:
@@ -73,7 +73,7 @@ def initialize_point():
 def initialize_dist():
     global DIST
     DIST = [[float(0) for i in range(NUM_OF_POINT)] for j in range(NUM_OF_POINT)]
-    f = open("data/route.txt")
+    f = open(CUR_DIR + "data/route.txt")
     lines = f.read().splitlines()
     for line in lines:
         temp = line.split(" ")
@@ -136,6 +136,16 @@ def generate_cost_current(content, flight_id):
                 cost_all += time_all * len(TODO_LIST[flight_id][i]["put"])
         return cost_all
 
+class flightDecode(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=dic2objhook)
+
+def dic2objhook(dic):
+    if isinstance(dic, dict):
+        return Flight(dic['point'], dic['distance'], dic['postion'], dic['mission_a'], 
+        dic['mission_b'], dic['route'], dic['route_done'], dic['todo_list'])
+    return dic
+
 init_center()
 load_file()
 
@@ -151,17 +161,17 @@ def handle(event, context):
     with open(CUR_DIR + "TODO_LIST.json", "r") as f:
         TODO_LIST = json.load(f)
     with open(CUR_DIR + "MISSION_A.json", "r") as f:
-        MISSION_A = json.loads(f)
+        MISSION_A = json.load(f)
     with open(CUR_DIR + "MISSION_B.json", "r") as f:
-        MISSION_B = json.loads(f)
+        MISSION_B = json.load(f)
     with open(CUR_DIR + "POSITION.json", "r") as f:
-        POSITION = json.loads(f)
+        POSITION = json.load(f)
     with open(CUR_DIR + "FLIGHT.json", "r") as f:
-        FLIGHT = json.loads(f)
+        FLIGHT = json.load(f, cls=flightDecode)
     with open(CUR_DIR + "CURRENT_COST.json", "r") as f:
-        CURRENT_COST = json.loads(f)
+        CURRENT_COST = json.load(f)
     with open(CUR_DIR + "MISSION_ALL.json", "r") as f:
-        MISSION_ALL = json.loads(f)
+        MISSION_ALL = json.load(f)
     if input_from_ui["type"] == 0:
         for i in range(NUM_OF_FLIGHT):
             POSITION[i] = FLIGHT[i].get_position(1)
@@ -184,7 +194,7 @@ def handle(event, context):
         with open(CUR_DIR + "CURRENT_COST.json", "w") as f:
             f.write(json.dumps(CURRENT_COST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT))
+            f.write(json.dumps(FLIGHT.to_dict()))
         response_body = json.dumps({"todo_list": TODO_LIST, "position": POSITION, "flight_info": finfo, "mission_info": minfo, "avail_mission": avail_m})
         return response_body
     if input_from_ui["type"] == 1:
@@ -199,7 +209,7 @@ def handle(event, context):
         with open(CUR_DIR + "TODO_LIST.json", "w") as f:
             f.write(json.dumps(TODO_LIST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT))
+            f.write(json.dumps(FLIGHT.to_dict()))
         response_body = json.dumps({"message": message})
         return response_body
     if input_from_ui["type"] == 2:
@@ -213,7 +223,7 @@ def handle(event, context):
         with open(CUR_DIR + "TODO_LIST.json", "w") as f:
             f.write(json.dumps(TODO_LIST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT))
+            f.write(json.dumps(FLIGHT.to_dict()))
         response_body = json.dumps({"message": message})
         return response_body
 

@@ -29,6 +29,35 @@ class Flight(object):
         # current todolist
         self._todo_list = []
 
+    def __init__(self, point, distance, position, mission_a, mission_b, route, route_done, todo_list):
+        self._point = point
+        # DIST [[]]
+        self._distance = distance
+        # current position
+        self._position = position
+        # mission A
+        self._mission_a = mission_a
+        # mission B
+        self._mission_b = mission_b
+        # new route
+        self._route = route
+        # route finished
+        self._route_done = route_done
+        # current todolist
+        self._todo_list = todo_list
+
+    def to_dict(self):
+        return {
+            "point": self._point,
+            "distance": self._distance,
+            "position": self._position,
+            "mission_a": self._mission_a,
+            "mission_b": self._mission_b,
+            "route": self._route,
+            "route_done": self._route_done,
+            "todo_list": self._todo_list
+        }
+
     """
     time_interval + position + route -> position' + route_done
     """
