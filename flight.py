@@ -11,25 +11,7 @@ SPEED_OF_FLIGHT = 0.75
 
 class Flight(object):
 
-    def __init__(self, point, distance, mission_a, mission_b):
-        # POINT {}
-        self._point = point
-        # DIST [[]]
-        self._distance = distance
-        # current position
-        self._position = [118958877.0, 32114745.0]
-        # mission A
-        self._mission_a = mission_a
-        # mission B
-        self._mission_b = mission_b
-        # new route
-        self._route = []
-        # route finished
-        self._route_done = []
-        # current todolist
-        self._todo_list = []
-
-    def __init__(self, point, distance, position, mission_a, mission_b, route, route_done, todo_list):
+    def __init__(self, point, distance, mission_a, mission_b, position=[118958877.0, 32114745.0], route=[], route_done=[], todo_list=[]):
         self._point = point
         # DIST [[]]
         self._distance = distance

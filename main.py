@@ -142,8 +142,8 @@ class flightDecode(json.JSONDecoder):
 
 def dic2objhook(dic):
     if isinstance(dic, dict):
-        return Flight(dic['point'], dic['distance'], dic['postion'], dic['mission_a'], 
-        dic['mission_b'], dic['route'], dic['route_done'], dic['todo_list'])
+        return Flight(dic['point'], dic['distance'], dic['mission_a'], 
+        dic['mission_b'], dic['postion'], dic['route'], dic['route_done'], dic['todo_list'])
     return dic
 
 init_center()
