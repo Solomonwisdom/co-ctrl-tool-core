@@ -87,7 +87,10 @@ def initialize_flight():
         FLIGHT[i] = Flight(deepcopy(POINT), deepcopy(DIST), deepcopy(MISSION_A[i]), deepcopy(MISSION_B[i]))
         FLIGHT[i].update_from_center(deepcopy(MISSION_A[i]), deepcopy(MISSION_B[i]), deepcopy(TODO_LIST[i]))
     with open(CUR_DIR + "FLIGHT.json", "w") as f:
-        f.write(json.dumps(FLIGHT.to_dict()))
+        dictFlight = {}
+        for k in FLIGHT:
+            dictFlight[k] = FLIGHT[k].to_dict()
+        json.dump(dictFlight, f)
 
 def load_file():
     initialize_point()
@@ -136,10 +139,6 @@ def generate_cost_current(content, flight_id):
                 cost_all += time_all * len(TODO_LIST[flight_id][i]["put"])
         return cost_all
 
-class flightDecode(json.JSONDecoder):
-    def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=dic2objhook)
-
 def dic2objhook(dic):
     if isinstance(dic, dict):
         return Flight(dic['point'], dic['distance'], dic['mission_a'], 
@@ -167,7 +166,10 @@ def handle(event, context):
     with open(CUR_DIR + "POSITION.json", "r") as f:
         POSITION = json.load(f)
     with open(CUR_DIR + "FLIGHT.json", "r") as f:
-        FLIGHT = json.load(f, cls=flightDecode)
+        dictFlight = json.load(f)
+        FLIGHT = {}
+        for k in dictFlight:
+            FLIGHT[k] = dic2objhook(dictFlight)
     with open(CUR_DIR + "CURRENT_COST.json", "r") as f:
         CURRENT_COST = json.load(f)
     with open(CUR_DIR + "MISSION_ALL.json", "r") as f:
@@ -194,7 +196,10 @@ def handle(event, context):
         with open(CUR_DIR + "CURRENT_COST.json", "w") as f:
             f.write(json.dumps(CURRENT_COST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT.to_dict()))
+            dictFlight = {}
+            for k in FLIGHT:
+                dictFlight[k] = FLIGHT[k].to_dict()
+            json.dump(dictFlight, f)
         response_body = json.dumps({"todo_list": TODO_LIST, "position": POSITION, "flight_info": finfo, "mission_info": minfo, "avail_mission": avail_m})
         return response_body
     if input_from_ui["type"] == 1:
@@ -209,7 +214,10 @@ def handle(event, context):
         with open(CUR_DIR + "TODO_LIST.json", "w") as f:
             f.write(json.dumps(TODO_LIST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT.to_dict()))
+            dictFlight = {}
+            for k in FLIGHT:
+                dictFlight[k] = FLIGHT[k].to_dict()
+            json.dump(dictFlight, f)
         response_body = json.dumps({"message": message})
         return response_body
     if input_from_ui["type"] == 2:
@@ -223,7 +231,10 @@ def handle(event, context):
         with open(CUR_DIR + "TODO_LIST.json", "w") as f:
             f.write(json.dumps(TODO_LIST))
         with open(CUR_DIR + "FLIGHT.json", "w") as f:
-            f.write(json.dumps(FLIGHT.to_dict()))
+            dictFlight = {}
+            for k in FLIGHT:
+                dictFlight[k] = FLIGHT[k].to_dict()
+            json.dump(dictFlight, f)
         response_body = json.dumps({"message": message})
         return response_body
 
