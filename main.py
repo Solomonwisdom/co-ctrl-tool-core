@@ -142,7 +142,7 @@ def generate_cost_current(content, flight_id):
 def dic2objhook(dic):
     if isinstance(dic, dict):
         return Flight(dic['point'], dic['distance'], dic['mission_a'], 
-        dic['mission_b'], dic['postion'], dic['route'], dic['route_done'], dic['todo_list'])
+        dic['mission_b'], dic['position'], dic['route'], dic['route_done'], dic['todo_list'])
     return dic
 
 init_center()
@@ -169,7 +169,7 @@ def handle(event, context):
         dictFlight = json.load(f)
         FLIGHT = {}
         for k in dictFlight:
-            FLIGHT[k] = dic2objhook(dictFlight)
+            FLIGHT[int(k)] = dic2objhook(dictFlight[k])
     with open(CUR_DIR + "CURRENT_COST.json", "r") as f:
         CURRENT_COST = json.load(f)
     with open(CUR_DIR + "MISSION_ALL.json", "r") as f:
